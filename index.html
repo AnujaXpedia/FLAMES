@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FLAMES Game</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #f4f4f7;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+        .container {
+            text-align: center;
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            width: 300px;
+        }
+        input[type="text"] {
+            padding: 10px;
+            margin: 10px 0;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+            width: calc(100% - 22px);
+        }
+        button {
+            padding: 10px 20px;
+            border-radius: 5px;
+            border: none;
+            background-color: #007bff;
+            color: white;
+            cursor: pointer;
+            margin: 10px;
+            width: calc(50% - 22px);
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+        #result {
+            margin-top: 20px;
+            font-size: 20px;
+            color: #333;
+        }
+    </style>
+    <script>
+        function calculateFlames() {
+            let name1 = document.getElementById('name1').value.replace(/\s+/g, '').toLowerCase();
+            let name2 = document.getElementById('name2').value.replace(/\s+/g, '').toLowerCase();
+            
+            for (let i = 0; i < name1.length; i++) {
+                if (name2.includes(name1[i])) {
+                    name2 = name2.replace(name1[i], '');
+                    name1 = name1.replace(name1[i], '');
+                    i--;
+                }
+            }
+            
+            const totalLength = name1.length + name2.length;
+            let flames = 'FLAMES';
+            let result = '';
+            
+            if (totalLength > 0) {
+                let removalIndex = totalLength % flames.length - 1;
+                
+                while (flames.length > 1) {
+                    if (removalIndex >= 0) {
+                        flames = flames.substring(removalIndex + 1) + flames.substring(0, removalIndex);
+                    } else {
+                        flames = flames.substring(0, flames.length - 1);
+                    }
+                    removalIndex = (removalIndex + totalLength) % flames.length - 1;
+                }
+                
+                switch(flames) {
+                    case 'F': result = 'Friends'; break;
+                    case 'L': result = 'Love'; break;
+                    case 'A': result = 'Affection'; break;
+                    case 'M': result = 'Marriage'; break;
+                    case 'E': result = 'Enemies'; break;
+                    case 'S': result = 'Siblings'; break;
+                }
+            } else {
+                result = 'Please enter different names.';
+            }
+            
+            document.getElementById('result').innerText = 'Result: ' + result;
+        }
+        function refreshGame() {
+            document.getElementById('name1').value = '';
+            document.getElementById('name2').value = '';
+            document.getElementById('result').innerText = '';
+        }
+    </script>
+</head>
+<body>
+    <div class="container">
+        <h2>FLAMES Game</h2>
+        <div>
+            <input type="text" id="name1" placeholder="First Name" required>
+        </div>
+        <div>
+            <input type="text" id="name2" placeholder="Second Name" required>
+        </div>
+        <button onclick="calculateFlames()">Calculate</button>
+        <button onclick="refreshGame()">Refresh</button>
+        <div id="result"></div>
+    </div>
+</body>
+</html>
